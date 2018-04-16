@@ -54,10 +54,10 @@ uint8_t channel;
 
 	for ( channel = 0; channel < NRO_ANALOG_CHANNELS; channel++) {
 		systemVars.coef_calibracion[channel] = 3646;
-		systemVars.Imin[channel] = 0;
+		systemVars.Imin[channel] = 4;
 		systemVars.Imax[channel] = 20;
 		systemVars.Mmin[channel] = 0;
-		systemVars.Mmax[channel] = 6;
+		systemVars.Mmax[channel] = 100;
 		snprintf_P( systemVars.aChName[channel], PARAMNAME_LENGTH, PSTR("A%d\0"),channel );
 	}
 

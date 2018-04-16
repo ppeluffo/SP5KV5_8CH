@@ -87,9 +87,9 @@ uint16_t eeAddress = 0;
 	for ( recd_id=0; recd_id < FF_MAX_RCDS; recd_id++) {
 
 		// Para no salir por wdg reset
-		if ( (recd_id % 128) == 0 ) {
-			wdt_reset();
-		}
+//		if ( (recd_id % 128) == 0 ) {
+//			wdt_reset();
+//		}
 
 		eeAddress = FF_ADDR_START + recd_id * FF_RECD_SIZE;
 		// leo una pagina entera, (recd) 64 bytes.
@@ -478,7 +478,7 @@ uint16_t tryes;
 uint16_t rcd_nbr;
 uint16_t eeAddress = 0;
 
-	wdt_reset();
+//	wdt_reset();
 
 	// Lo primero es obtener el semaforo del I2C
 	FreeRTOS_ioctl(&pdI2C,ioctlOBTAIN_BUS_SEMPH, NULL, DEBUG_FF);
@@ -512,16 +512,16 @@ uint16_t eeAddress = 0;
 		}
 
 		// Para no salir por wdg reset
-		if ( (rcd_nbr % 64) == 0 ) {
-			wdt_reset();
-		}
+//		if ( (rcd_nbr % 64) == 0 ) {
+//			wdt_reset();
+//		}
 	}
 
 	FreeRTOS_write( &pdUART1, "\r\n\0", sizeof("\r\n\0"));
 	FreeRTOS_ioctl(&pdI2C,ioctlRELEASE_BUS_SEMPH, NULL, DEBUG_FF);
 
 	// RESET
-	u_reset();
+//	u_reset();
 
 }
 //------------------------------------------------------------------------------------

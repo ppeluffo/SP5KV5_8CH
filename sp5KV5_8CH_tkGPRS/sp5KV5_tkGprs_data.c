@@ -73,7 +73,7 @@ bool exit_flag = false;
 			// No hay datos para trasmitir
 			// modo continuo: espero 90s antes de revisar si hay mas datos para trasmitir
 
-			sleep_time = 90;
+			sleep_time = 60;
 			while( sleep_time-- > 0 ) {
 
 				// PROCESO LAS SEÑALES
@@ -305,7 +305,7 @@ StatBuffer_t pxFFStatBuffer;
 
 	// Datos digitales
 	for ( channel = 0; channel < NRO_DIGITAL_CHANNELS; channel++ ) {
-		pos += snprintf_P( &gprs_printfBuff[pos], ( sizeof(gprs_printfBuff) - pos ), PSTR(",%s=%d"),systemVars.dChName[channel],data_frame.digital_frame.level[channel] );
+		pos += snprintf_P( &gprs_printfBuff[pos], ( sizeof(gprs_printfBuff) - pos ), PSTR(",%s_L=%d,%s_T=%d"),systemVars.dChName[channel], data_frame.digital_frame.level[channel], systemVars.dChName[channel], data_frame.digital_frame.ticks_time_H[channel]);
 	}
 
 	// Paso 3: Trasmito por el modem.

@@ -61,13 +61,17 @@ static void pv_check_wdg(void)
 
 static u08 l_timer = 5;
 
-	if (l_timer-- > 0 )
+
+	if (l_timer-- > 0 ) {
+		wdt_reset();
 		return;
+	}
 
 	l_timer = 5;
 	if ( systemWdg == 0 ) {
-		wdt_reset();
-		systemWdg = WDG_CTL + WDG_CMD;
+		systemWdg = WDG_CTL + WDG_CMD + WDG_DIN;
+	} else {
+		while(1);
 	}
 
 }
@@ -153,6 +157,8 @@ uint16_t recSize;
 		snprintf_P( ctl_printfBuff,sizeof(ctl_printfBuff),PSTR("Load config ERROR: defaults !!\r\n\0") );
 	}
 	FreeRTOS_write( &pdUART1, ctl_printfBuff, sizeof(ctl_printfBuff) );
+
+	u_kick_Wdg(WDG_CTL);
 
 	// Inicializo la memoria EE ( fileSysyem)
 	ffRcd = FF_fopen();

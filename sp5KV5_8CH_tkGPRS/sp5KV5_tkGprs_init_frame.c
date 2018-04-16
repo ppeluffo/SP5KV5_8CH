@@ -152,7 +152,7 @@ EXIT:
 static void pv_TX_init_frame(void)
 {
 	// Send Init Frame
-	// GET /cgi-bin/sp5K/sp5K.pl?DLGID=SPY001&PASSWD=spymovil123&&INIT&ALARM&PWRM=CONT&TPOLL=23&TDIAL=234&PWRS=1,1230,2045&A0=pZ,1,20,3,10&D0=qE,3.24&CONS=1,1234,927,1,3 HTTP/1.1
+	// GET /cgi-bin/sp5K8CH.pl?DLGID=SPY001&PASSWD=spymovil123&&INIT&CSQ=75 HTTP/1.1
 	// Host: www.spymovil.com
 	// Connection: close\r\r ( no mando el close )
 
@@ -178,51 +178,9 @@ uint8_t i;
 	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&PASSWD=%s"), systemVars.passwd );
 	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&IMEI=%s"), g_getImei() );
 	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&VER=%s\0"), SP5K_REV );
-	// GPRS sent
-	FreeRTOS_write( &pdUART0, gprs_printfBuff, sizeof(gprs_printfBuff) );
-
-	// DEBUG & LOG
-	if ( (systemVars.debugLevel &  D_GPRS ) != 0) {
-		snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("\r\n\0") );
-		FreeRTOS_write( &pdUART1, gprs_printfBuff, sizeof(gprs_printfBuff) );
-	}
-
-	// BODY ( 1a parte) :
-	memset(gprs_printfBuff, '\0', sizeof(gprs_printfBuff));
-	pos = snprintf_P( gprs_printfBuff ,CHAR256,PSTR("&INIT"));
-
-	// timerpoll
-	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&TPOLL=%d"), systemVars.timerPoll);
-
-	// csq
-	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&CSQ=%d\0"), systemVars.csq);
+	pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&INIT&CSQ=%d\0"), systemVars.csq);
 
 	// GPRS sent
-	FreeRTOS_write( &pdUART0, gprs_printfBuff, sizeof(gprs_printfBuff) );
-
-	// DEBUG & LOG
-	if ( (systemVars.debugLevel &  D_GPRS ) != 0) {
-		snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("\r\n\0") );
-		FreeRTOS_write( &pdUART1, gprs_printfBuff, sizeof(gprs_printfBuff) );
-	}
-
-	// BODY ( 2a parte) :
-	memset(gprs_printfBuff, '\0', sizeof(gprs_printfBuff));
-	pos = 0;
-
-	// Configuracion de canales analogicos
-	for ( i = 0; i < NRO_ANALOG_CHANNELS; i++) {
-		pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&A%d=%s,%d,%d,%d,%d"), i,systemVars.aChName[i],systemVars.Imin[i], systemVars.Imax[i], systemVars.Mmin[i], systemVars.Mmax[i]);
-	}
-	// Configuracion de canales digitales
-	for ( i = 0; i < NRO_DIGITAL_CHANNELS; i++) {
-		pos += snprintf_P( &gprs_printfBuff[pos],( sizeof(gprs_printfBuff) - pos ),PSTR("&D%d=%s,"),i,systemVars.dChName[i]);
-	}
-
-	// Reset status
-	pos += snprintf_P( &gprs_printfBuff[pos],( CHAR256 - pos ),PSTR("&WDG=%d\0"),wdgStatus.resetCause );
-
-	// GPRS send
 	FreeRTOS_write( &pdUART0, gprs_printfBuff, sizeof(gprs_printfBuff) );
 
 	// DEBUG & LOG
@@ -256,7 +214,7 @@ uint8_t channel;
 
 	// Proceso la respuesta del INIT para reconfigurar los parametros
 	pv_process_server_clock();
-	saveFlag += pv_process_timerPoll();
+/*	saveFlag += pv_process_timerPoll();
 	// Canales analogicos.
 	for ( channel = 0; channel < NRO_ANALOG_CHANNELS; channel++ ) {
 		saveFlag += pv_process_analogCh(channel);
@@ -277,7 +235,7 @@ uint8_t channel;
 
 		}
 	}
-
+*/
 }
 //------------------------------------------------------------------------------------
 static void pv_process_server_clock(void)
@@ -295,6 +253,8 @@ char *stringp;
 char *token;
 char *delim = ",=:><";
 char rtcStr[12];
+uint8_t i;
+char c;
 
 	s = FreeRTOS_UART_getFifoPtr(&pdUART0);
 	p = strstr(s, "CLOCK");
@@ -311,7 +271,16 @@ char rtcStr[12];
 
 	token = strsep(&stringp,delim);			// rtc
 	memset(rtcStr, '\0', sizeof(rtcStr));
-	memcpy(rtcStr,token, sizeof(rtcStr));	// token apunta al comienzo del string con la hora
+//	memcpy(rtcStr,token, sizeof(rtcStr));	// token apunta al comienzo del string con la hora
+	for ( i = 0; i<12; i++) {
+		c = *token;
+		rtcStr[i] = c;
+		c = *(++token);
+		if ( c == '\0' )
+			break;
+
+	}
+
 	RTC_str_to_date(rtcStr);
 
 	if ( (systemVars.debugLevel & (D_BASIC + D_GPRS) ) != 0) {

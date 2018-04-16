@@ -66,7 +66,7 @@ typedef enum { LOW = 0, HIGH } t_low_high;
 // DCD
 // Como el MCP23018 a veces no detecta el nivel del modem, cableamos
 // el DCD a PB3
-// Pin de control de fuente de la terminal ( PB3)
+// Pin de control DCD. ( PB3)
 #define DCD_PORT		PORTB
 #define DCD_PIN			PINB
 #define DCD_BIT			3

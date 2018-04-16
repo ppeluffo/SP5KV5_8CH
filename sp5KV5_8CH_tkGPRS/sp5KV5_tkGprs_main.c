@@ -98,10 +98,9 @@ char c;
 			gprsRx.buffer[gprsRx.ptr] = c;
 			// Avanzo en modo circular
 			gprsRx.ptr = ( gprsRx.ptr  + 1 ) % ( UART0_RXBUFFER_LEN );
-
+/*
 			// Los comandos vienen terminados en CR
-/*			if (c == '\r') {
-
+			if (c == '\r') {
 				if ( strstr( gprsRx.buffer, "OK") != NULL ) {
 					FreeRTOS_write( &pdUART1, "DEBUG ** MRSP_OK\r\n\0", sizeof("DEBUG ** MRSP_OK\r\n\0") );
 					// No podemos asumir que el socket este cerrado ya que en las respuestas HTTP puede venir
@@ -119,6 +118,7 @@ char c;
 				if ( strstr( gprsRx.buffer, "NO CARRIER") != NULL ) {
 					FreeRTOS_write( &pdUART1, "DEBUG ** MRSP_NO CARRIER\r\n\0", sizeof("DEBUG ** MRSP_NO CARRIER\r\n\0") );
 				}
+
 			}
 */
 		}

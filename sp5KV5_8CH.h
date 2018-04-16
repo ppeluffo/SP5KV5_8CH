@@ -53,8 +53,8 @@
 
 // DEFINICION DEL TIPO DE SISTEMA
 //----------------------------------------------------------------------------
-#define SP5K_REV "6.0.0"
-#define SP5K_DATE "@ 20180312"
+#define SP5K_REV "6.0.1"
+#define SP5K_DATE "@ 20180416"
 
 #define SP5K_MODELO "sp5KV5_8CH HW:avr1284P R5.0"
 #define SP5K_VERSION "FW:FRTOS8"

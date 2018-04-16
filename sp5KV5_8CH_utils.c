@@ -167,7 +167,7 @@ void u_loadDefaults(void)
 	// DEBUG
 	systemVars.debugLevel = D_BASIC;
 
-	strncpy_P(systemVars.server_ip_address, PSTR("192.168.0.9\0"),IP_LENGTH);
+	strncpy_P(systemVars.server_ip_address, PSTR("192.168.1.9\0"),IP_LENGTH);
 
 	// Defaults de los canales analogicos y timerpoll.
 	u_analog_load_defaults();

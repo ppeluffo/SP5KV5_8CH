@@ -204,7 +204,7 @@ unsigned int i,j;
 	xTaskCreate(tkGprsTx, "GPRS", tkGprs_STACK_SIZE, NULL, tkGprs_TASK_PRIORITY,  &xHandle_tkGprs);
 	xTaskCreate(tkGprsRx, "GPRX", tkGprsRx_STACK_SIZE, NULL, tkGprsRx_TASK_PRIORITY,  &xHandle_tkGprsRx);
 
-	systemWdg = WDG_CTL + WDG_CMD;
+	systemWdg = WDG_CTL + WDG_CMD + WDG_DIN;
 
 	/* Arranco el RTOS. */
 	vTaskStartScheduler();
